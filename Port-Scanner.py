@@ -46,11 +46,13 @@ try:
     # For loop to scan the port number range of the target IP
     for port in range(portMin, portMax+1):
         
-        # Creating socket object as S
+        # Creating a socket object as S
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.settimeout(0.5)
-            
+
+           
             result = s.connect_ex((ipAddr, port))
+            # if statement to see if the port is open or not as s.connect_ex will return 0 if the connection is succesful
             if result == 0:
                 print(f"Port {port} is open")
             else:
