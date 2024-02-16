@@ -26,12 +26,13 @@ while True:
     if portMax < 0 or portMax > 65535:
         print("Invalid port number entered.")
     elif portMax < portMin:
-        print("\nPlease enter a maximum port number greater than the minimum port number.")
+        print("\nPlease enter a maximum port number greater than or equal to the minimum port number.")
         print(f"The minimum port number is: {portMin}")
     else:
         break
 
-print("""\n______               _        _____                                        
+print("""
+\n______               _        _____                                        
 | ___ \             | |      /  ___|                                       
 | |_/ /  ___   _ __ | |_     \ `--.   ___   __ _  _ __   _ __    ___  _ __ 
 |  __/  / _ \ | '__|| __|     `--. \ / __| / _` || '_ \ | '_ \  / _ \| '__|
@@ -45,18 +46,24 @@ try:
     # For loop to scan the port number range of the target IP
     for port in range(portMin, portMax+1):
         
+        # Creating socket object as S
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.settimeout(0.5)
             
-            if s.connect_ex((ipAddr, port)):
+            result = s.connect_ex((ipAddr, port))
+            if result == 0:
                 print(f"Port {port} is open")
+            else:
+                print(f"Port {port} is not open")
             s.close()
         
 
+# Exit exception if there is a socket error
 except socket.error:
     print("\nHost is non-responsive")
     sys.exit()
 
+# Exit exception if the user inputs CRL+C
 except KeyboardInterrupt:
     print("\nExiting")
     sys.exit()
